@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">User Hub</string>
+
+    <string name="dummy_name">Dummy Name</string>
+    <string name="dummy_place">Dummy Place</string>
+    <string name="dummy_location">Dummy Location</string>
+    <string name="followers">Followers</string>
+    <string name="follower_count_background">follower_count_background</string>
+    <string name="repositories">Repository</string>
+    <string name="following">Following</string>
+</resources>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        card_view:cardBackgroundColor="@color/colorCard"
+        card_view:cardCornerRadius="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="256dp"
+                android:layout_height="256dp"
+                android:layout_centerHorizontal="true"
+                app:civ_border_width="5dp"
+                app:civ_border_color="@color/colorPrimaryDark"
+                tools:src="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_avatar"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                tools:text="@string/dummy_name" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_below="@id/tv_name"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/colorTextSecondary"
+                tools:text="Dummy Username"/>
+
+            <TextView
+                android:id="@+id/tv_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/tv_username"
+                android:gravity="center"
+                android:textSize="28sp"
+                tools:text="@string/dummy_place" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/tv_company"
+                android:gravity="center"
+                android:textSize="24sp"
+                tools:text="@string/dummy_location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/tv_location"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        android:text="@string/followers" />
+
+                    <TextView
+                        android:id="@+id/tv_followers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="@string/followers" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        android:text="@string/following" />
+
+                    <TextView
+                        android:id="@+id/tv_following"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="@string/following" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        android:text="@string/repositories" />
+
+                    <TextView
+                        android:id="@+id/tv_repo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="@string/repositories" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>

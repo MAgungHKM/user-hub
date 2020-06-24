@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
+    card_view:cardBackgroundColor="@color/colorCard"
+    card_view:cardCornerRadius="15dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerVertical="true"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/colorPrimaryDark"
+            tools:src="@android:color/darker_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/img_avatar"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="@string/dummy_name" />
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    tools:text="Dummy Username"/>
+
+                <TextView
+                    android:id="@+id/tv_company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp"
+                    tools:text="@string/dummy_place" />
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    tools:text="@string/dummy_location" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_weight="1.8"
+                card_view:cardBackgroundColor="@color/colorPrimaryDark"
+                card_view:cardCornerRadius="20dp">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+                    card_view:cardCornerRadius="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_txt_follow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:text="@string/followers" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_txt_follow">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:adjustViewBounds="true"
+                                android:src="@color/colorCard"
+                                android:contentDescription="@string/follower_count_background" />
+
+                            <TextView
+                                android:id="@+id/tv_followers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="10dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:text="@string/followers" />
+                        </FrameLayout>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
