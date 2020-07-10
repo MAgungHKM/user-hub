@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.hkm.userhub.ui.home.HomeFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,10 +21,10 @@ class MainActivity : AppCompatActivity() {
 
         if (fragment !is HomeFragment) {
             Log.d("User Hub", "Fragment Name : ${HomeFragment::class.java.simpleName}")
-            mFragmentManager
-                .beginTransaction()
-                .add(R.id.frame_container, mHomeFragment, HomeFragment::class.java.simpleName)
-                .commit()
+            mFragmentManager.beginTransaction().apply {
+                add(R.id.frame_container, mHomeFragment, HomeFragment::class.java.simpleName)
+                commit()
+            }
         }
     }
 
@@ -36,8 +39,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowHomeEnabled(false)
-        supportActionBar?.title = "Home"
+        if(supportActionBar?.title == "Home") {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowHomeEnabled(false)
+        }
+    }
+
+    interface VolleyCallBack {
+        fun onSuccess()
     }
 }

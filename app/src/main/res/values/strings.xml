@@ -8,4 +8,18 @@
     <string name="follower_count_background">follower_count_background</string>
     <string name="repositories">Repository</string>
     <string name="following">Following</string>
+    <string name="search_user">Search user</string>
+    <string name="no_user_found">There are no user matches your search.</string>
+
+    <string name="tab_followers">Followers</string>
+    <string name="tab_following">Following</string>
+    <string name="tab_repositories">Repositories</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_follower_found">This user doesn\'t seems to have any follower.</string>
+    <string name="no_following_found">This user doesn\'t seems to follow anyone.</string>
+    <string name="no_repository_found">This user doesn\'t seems to have a single public repository.</string>
+    <string name="description_not_found">No description provided.</string>
+    <string name="dummy_description">Dummy Description</string>
+    <string name="stargazers">Stargazers</string>
+    <string name="tab_index_out_of_bounds">Why are you here?</string>
 </resources>

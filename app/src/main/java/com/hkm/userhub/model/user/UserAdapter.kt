@@ -1,4 +1,4 @@
-package com.hkm.userhub
+package com.hkm.userhub.model.user
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,15 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.hkm.userhub.R
 
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter internal constructor(private val listUser: ArrayList<User>) :
+class UserAdapter :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     private lateinit var onItemClickCallback: OnItemClickCallback
+    private val listUser = ArrayList<User>()
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
+    }
+
+    fun setData(users: ArrayList<User>) {
+        listUser.clear()
+        listUser.addAll(users)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -43,11 +51,13 @@ class UserAdapter internal constructor(private val listUser: ArrayList<User>) :
                 tv_username.text = user.username
                 tv_company.text = user.company
                 tv_location.text = user.location
-                tv_followers.text = user.followers
+                tv_followers.text = user.followersCount
 
                 Glide.with(context)
                     .load(user.avatar)
-                    .apply(RequestOptions().override(200, 200))
+                    .apply(RequestOptions()
+                        .override(200, 200)
+                        .placeholder(R.drawable.user_placeholder))
                     .into(img_avatar)
             }
         }
