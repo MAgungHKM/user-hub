@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">User Hub</string>
+
+    <string name="dummy_name">Nama Kosong</string>
+    <string name="dummy_place">Tempat Kosong</string>
+    <string name="dummy_location">Lokasi Kosong</string>
+    <string name="followers">Pengikut</string>
+    <string name="follower_count_background">follower_count_background</string>
+    <string name="repositories">Repositori</string>
+    <string name="following">Diikuti</string>
+    <string name="search_user">Cari pengguna</string>
+    <string name="no_user_found">Pengguna yang anda cari tidak ditemukan.</string>
+
+    <string name="tab_followers">Pengikut</string>
+    <string name="tab_following">Diikuti</string>
+    <string name="tab_repositories">Repositori</string>
+    <string name="no_follower_found">Pengguna ini tidak memiliki pengikut.</string>
+    <string name="no_following_found">Pengguna ini tidak mengikuti siapapun.</string>
+    <string name="no_repository_found">Pengguna ini tidak mempunyai repositori publik sama sekali.</string>
+    <string name="description_not_found">Tidak terdapat deskripsi.</string>
+    <string name="dummy_description">Deskripsi Kosong</string>
+    <string name="stargazers">Dibintangi</string>
+    <string name="tab_index_out_of_bounds">Kenapa anda disini?</string>
+    <string name="dummy_username">Nama Pengguna Kosong</string>
+    <string name="menu_home">Home</string>
+    <string name="home_background">Home Background</string>
+    <string name="no_internet">Tidak bisa terhubung ke internet. Cek koneksi jaringan anda!</string>
+    <string name="no_server">Server tidak bisa ditemukan. Cobalah beberapa saat lagi!</string>
+    <string name="no_parsing">Kesalahan dalam Parsing. Cobalah beberapa saat lagi!</string>
+    <string name="no_timeout">Koneksi terlalu lambat. Cek koneksi jaringan anda!.</string>
+    <string name="language">Bahasa</string>
+    <string name="choose_language">Pilih Bahasa</string>
+    <string name="language_english">Inggris</string>
+    <string name="language_indonesian">Bahasa Indonesia</string>
+</resources>

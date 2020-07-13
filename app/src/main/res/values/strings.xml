@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">User Hub</string>
 
@@ -14,7 +15,6 @@
     <string name="tab_followers">Followers</string>
     <string name="tab_following">Following</string>
     <string name="tab_repositories">Repositories</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_follower_found">This user doesn\'t seems to have any follower.</string>
     <string name="no_following_found">This user doesn\'t seems to follow anyone.</string>
     <string name="no_repository_found">This user doesn\'t seems to have a single public repository.</string>
@@ -22,4 +22,15 @@
     <string name="dummy_description">Dummy Description</string>
     <string name="stargazers">Stargazers</string>
     <string name="tab_index_out_of_bounds">Why are you here?</string>
+    <string name="dummy_username">Dummy Username</string>
+    <string name="menu_home">Home</string>
+    <string name="home_background">Home Background</string>
+    <string name="no_internet">Can\'t connect to Internet. Please check your connection!</string>
+    <string name="no_server">The server could not be found. Please try again after some time!</string>
+    <string name="no_parsing">Parsing error! Please try again after some time!</string>
+    <string name="no_timeout">Connection TimeOut! Please check your internet connection.</string>
+    <string name="language">Language</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="language_english">English</string>
+    <string name="language_indonesian">Bahasa Indonesia</string>
 </resources>

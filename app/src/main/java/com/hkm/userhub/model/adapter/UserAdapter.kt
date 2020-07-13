@@ -1,4 +1,4 @@
-package com.hkm.userhub.model.user
+package com.hkm.userhub.model.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
+import com.hkm.userhub.model.User
+import com.hkm.userhub.tools.setOnSingleClickListener
 
 import kotlinx.android.synthetic.main.item_user.view.*
 
@@ -38,8 +40,7 @@ class UserAdapter :
         val user = listUser[position]
 
         holder.bindUser(user)
-
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             onItemClickCallback.onItemClicked(listUser[holder.adapterPosition])
         }
     }
@@ -47,17 +48,16 @@ class UserAdapter :
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindUser(user: User) {
             with(itemView) {
-                tv_name.text = user.name
                 tv_username.text = user.username
-                tv_company.text = user.company
-                tv_location.text = user.location
                 tv_followers.text = user.followersCount
 
                 Glide.with(context)
                     .load(user.avatar)
-                    .apply(RequestOptions()
-                        .override(200, 200)
-                        .placeholder(R.drawable.user_placeholder))
+                    .apply(
+                        RequestOptions()
+                            .override(200, 200)
+                            .placeholder(R.drawable.user_placeholder)
+                    )
                     .into(img_avatar)
             }
         }

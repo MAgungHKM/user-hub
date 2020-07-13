@@ -1,30 +1,48 @@
 package com.hkm.userhub.ui.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
-import com.hkm.userhub.model.user.User
-import com.hkm.userhub.ui.SectionsPagerAdapter
+import com.hkm.userhub.model.adapter.SectionsPagerAdapter
+import com.hkm.userhub.tools.OnMyFragmentListener
 import com.hkm.userhub.ui.follow_repo.FollowRepoFragment
 import kotlinx.android.synthetic.main.fragment_detail.*
 
-class DetailFragment : Fragment() {
-    companion object {
-        var EXTRA_USER = "extra_user"
-    }
+class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var detailViewModel: DetailViewModel
+    private var mOnMyFragmentListener: OnMyFragmentListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnMyFragmentListener) {
+            mOnMyFragmentListener = context
+        } else {
+            throw RuntimeException(
+                "$context must implement OnFragmentInteractionListener"
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        detailViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance((activity as AppCompatActivity).application)).get(DetailViewModel::class.java)
+        setHasOptionsMenu(true)
+        detailViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance((activity as AppCompatActivity).application)
+        ).get(DetailViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -40,16 +58,22 @@ class DetailFragment : Fragment() {
 
         showLoading(true)
 
+        detailViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+            }
+        })
+
         if (arguments != null) {
-            val username = arguments?.getParcelable<User>(EXTRA_USER)?.username.toString()
+            val username = DetailFragmentArgs.fromBundle(arguments as Bundle).username
 
             detailViewModel.getUserDetail(username).observe(viewLifecycleOwner, Observer { user ->
-                if(user.name == "null") {
-                    (activity as AppCompatActivity).supportActionBar?.title = user.username
+                if (user.name == "null") {
+                    mOnMyFragmentListener?.onChangeToolbarTitle(user.username)
                     tv_name.text = user.username
                     tv_username.visibility = View.GONE
                 } else {
-                    (activity as AppCompatActivity).supportActionBar?.title = user.name
+                    mOnMyFragmentListener?.onChangeToolbarTitle(user.name)
                     tv_name.text = user.name
                     tv_username.text = user.username
                 }
@@ -65,9 +89,9 @@ class DetailFragment : Fragment() {
                     tv_location.visibility = View.GONE
 
                 Glide.with(this)
-                        .load(user.avatar)
-                        .apply(RequestOptions().override(500, 500))
-                        .into(img_avatar)
+                    .load(user.avatar)
+                    .apply(RequestOptions().override(500, 500))
+                    .into(img_avatar)
 
                 setupSectionsPager(user.username)
 
@@ -76,27 +100,44 @@ class DetailFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+        mOnMyFragmentListener?.onOptionsMenuSelected(this)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_language -> {
+                mOnMyFragmentListener?.showAlertDialog(
+                    R.id.menu_language,
+                    DetailFragment::class.java.simpleName
+                )
+                true
+            }
+            R.id.menu_home -> {
+                view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                true
+            }
+            else -> true
+        }
+    }
+
     private fun setupSectionsPager(username: String) {
         val mBundle = Bundle()
         mBundle.putString(FollowRepoFragment.EXTRA_USER, username)
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(context!!, (activity as AppCompatActivity).supportFragmentManager, mBundle)
+        val sectionsPagerAdapter = SectionsPagerAdapter(
+            context as Context,
+            (activity as AppCompatActivity).supportFragmentManager,
+            mBundle
+        )
         sectionsPagerAdapter.notifyDataSetChanged()
         view_pager.adapter = sectionsPagerAdapter
         tab_layout.setupWithViewPager(view_pager, true)
 
-        (activity as AppCompatActivity).supportActionBar?.elevation = 0f
+        mOnMyFragmentListener?.onChangeToolbarElevation(0f)
     }
-
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        requireActivity()
-//            .onBackPressedDispatcher
-//            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-//                override fun handleOnBackPressed() {
-//                }
-//            })
-//    }
 
     private fun showLoading(state: Boolean) {
         if (state) {
@@ -108,17 +149,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.title = ""
-    }
-
     override fun onDetach() {
         super.onDetach()
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(false)
-        (activity as AppCompatActivity).supportActionBar?.title = "Home"
+        mOnMyFragmentListener = null
     }
 }

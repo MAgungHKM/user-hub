@@ -6,22 +6,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
-import com.hkm.userhub.model.repo.Repo
-import com.hkm.userhub.model.repo.RepoAdapter
-import com.hkm.userhub.model.user.User
-import com.hkm.userhub.model.user.UserAdapter
-import com.hkm.userhub.ui.ItemSnaperHelper
-import com.hkm.userhub.ui.detail.DetailFragment
+import com.hkm.userhub.model.Repo
+import com.hkm.userhub.model.User
+import com.hkm.userhub.model.adapter.RepoAdapter
+import com.hkm.userhub.model.adapter.UserAdapter
+import com.hkm.userhub.tools.ItemSnaperHelper
+import com.hkm.userhub.ui.detail.DetailFragmentDirections
 import kotlinx.android.synthetic.main.fragment_follow_repo.*
-import kotlinx.android.synthetic.main.fragment_follow_repo.progress_bar
-import kotlinx.android.synthetic.main.fragment_follow_repo.tv_not_found
 
 
 class FollowRepoFragment : Fragment() {
@@ -47,8 +47,12 @@ class FollowRepoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        followRepoViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance((activity as AppCompatActivity).application)).get(FollowRepoViewModel::class.java)
+        followRepoViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance((activity as AppCompatActivity).application)
+        ).get(FollowRepoViewModel::class.java)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,66 +90,79 @@ class FollowRepoFragment : Fragment() {
                 followRepoViewModel.setListOfFollowers(username, object : VolleyCallBack {
                     override fun onSuccess() {
                         if (rv_user_repo != null && progress_bar != null) {
-                            showLoading(false)
                             showFollowersList()
+                            showLoading(false)
                         }
                     }
                 })
 
-                followRepoViewModel.getListOfFollowers().observe(viewLifecycleOwner, Observer { users ->
-                    if (users.isNotEmpty()) {
-                        followersAdapter.setData(users)
-                        tv_not_found.visibility = View.GONE
-                        rv_user_repo.visibility = View.VISIBLE
-                    } else {
-                        showLoading(false)
-                        tv_not_found.visibility = View.VISIBLE
-                        rv_user_repo.visibility = View.GONE
-                    }
-                })
+                followRepoViewModel.getListOfFollowers()
+                    .observe(viewLifecycleOwner, Observer { users ->
+                        if (users.isNotEmpty()) {
+                            followersAdapter.setData(users)
+                            tv_not_found.visibility = View.GONE
+                            rv_user_repo.visibility = View.VISIBLE
+                        } else {
+                            showLoading(false)
+                            tv_not_found.visibility = View.VISIBLE
+                            rv_user_repo.visibility = View.GONE
+                        }
+                    })
             }
             2 -> {
                 tv_not_found.text = getString(R.string.no_following_found)
                 followRepoViewModel.setListOfFollowing(username, object : VolleyCallBack {
                     override fun onSuccess() {
                         if (rv_user_repo != null && progress_bar != null) {
-                            showLoading(false)
                             showFollowingList()
+                            showLoading(false)
                         }
                     }
                 })
 
-                followRepoViewModel.getListOfFollowing().observe(viewLifecycleOwner, Observer { users ->
-                    if (users.isNotEmpty()) {
-                        followingAdapter.setData(users)
-                        tv_not_found.visibility = View.GONE
-                        rv_user_repo.visibility = View.VISIBLE
-                    } else {
-                        showLoading(false)
-                        tv_not_found.visibility = View.VISIBLE
-                        rv_user_repo.visibility = View.GONE
-                    }
-                })
+                followRepoViewModel.getListOfFollowing()
+                    .observe(viewLifecycleOwner, Observer { users ->
+                        if (users.isNotEmpty()) {
+                            followingAdapter.setData(users)
+                            tv_not_found.visibility = View.GONE
+                            rv_user_repo.visibility = View.VISIBLE
+                        } else {
+                            showLoading(false)
+                            tv_not_found.visibility = View.VISIBLE
+                            rv_user_repo.visibility = View.GONE
+                        }
+                    })
             }
             3 -> {
                 tv_not_found.text = getString(R.string.no_repository_found)
                 followRepoViewModel.setListOfRepositories(username)
 
-                followRepoViewModel.getListOfRepositories().observe(viewLifecycleOwner, Observer { repos ->
-                    showLoading(false)
-                    if (repos.isNotEmpty()) {
-                        repositoriesAdapter.setData(repos)
-                        showRepositoriesList()
-                        tv_not_found.visibility = View.GONE
-                        rv_user_repo.visibility = View.VISIBLE
-                    } else {
-                        tv_not_found.visibility = View.VISIBLE
-                        rv_user_repo.visibility = View.GONE
-                    }
-                })
+                followRepoViewModel.getListOfRepositories()
+                    .observe(viewLifecycleOwner, Observer { repos ->
+                        for (repo in repos) {
+                            if (repo.description == "null")
+                                repo.description = getString(R.string.description_not_found)
+                        }
+                        showLoading(false)
+                        if (repos.isNotEmpty()) {
+                            repositoriesAdapter.setData(repos)
+                            showRepositoriesList()
+                            tv_not_found.visibility = View.GONE
+                            rv_user_repo.visibility = View.VISIBLE
+                        } else {
+                            tv_not_found.visibility = View.VISIBLE
+                            rv_user_repo.visibility = View.GONE
+                        }
+                    })
             }
             else -> tv_not_found.text = getString(R.string.tab_index_out_of_bounds)
         }
+
+        followRepoViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun showLoading(state: Boolean) {
@@ -158,7 +175,8 @@ class FollowRepoFragment : Fragment() {
 
 
     private fun showFollowersList() {
-        rv_user_repo.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL,  false)
+        rv_user_repo.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_user_repo.adapter = followersAdapter
 
         followersAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
@@ -169,7 +187,8 @@ class FollowRepoFragment : Fragment() {
     }
 
     private fun showFollowingList() {
-        rv_user_repo.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL,  false)
+        rv_user_repo.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_user_repo.adapter = followingAdapter
 
         followingAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
@@ -180,24 +199,15 @@ class FollowRepoFragment : Fragment() {
     }
 
     private fun showSelectedUser(user: User) {
-        val mDetailFragment = DetailFragment()
+        val toDetailFragment = DetailFragmentDirections.actionDetailFragmentSelf()
+        toDetailFragment.username = user.username
 
-        val mBundle = Bundle()
-        mBundle.putParcelable(DetailFragment.EXTRA_USER, user)
-
-        mDetailFragment.arguments = mBundle
-
-        val mFragmentManager = parentFragmentManager
-        mFragmentManager.beginTransaction().apply {
-            detach(mFragmentManager.findFragmentByTag(DetailFragment::class.java.simpleName) as Fragment)
-            add(R.id.frame_container, mDetailFragment, DetailFragment::class.java.simpleName)
-            addToBackStack("detail")
-            commit()
-        }
+        view?.findNavController()?.navigate(toDetailFragment)
     }
 
     private fun showRepositoriesList() {
-        rv_user_repo.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL,  false)
+        rv_user_repo.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_user_repo.adapter = repositoriesAdapter
 
         repositoriesAdapter.setOnItemClickCallback(object : RepoAdapter.OnItemClickCallback {

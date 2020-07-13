@@ -1,48 +1,114 @@
 package com.hkm.userhub
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.appcompat.widget.Toolbar
+import com.hkm.userhub.tools.ContentWrapper
+import com.hkm.userhub.tools.OnMyFragmentListener
+import com.hkm.userhub.tools.SharedPreferences
 import com.hkm.userhub.ui.home.HomeFragment
+import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnMyFragmentListener {
+    companion object {
+        private const val KEY_LANGUAGE = "key_language"
+    }
+
+    private var sharedPref: SharedPreferences? = null
+
+    override fun attachBaseContext(newBase: Context) {
+        sharedPref = SharedPreferences(newBase)
+        val languageCode = sharedPref?.getData(KEY_LANGUAGE)
+        val mContext = ContentWrapper.changeLang(newBase, languageCode.toString())
+        super.attachBaseContext(mContext)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(toolbar)
         setContentView(R.layout.activity_main)
 
-        val mFragmentManager = supportFragmentManager
-        val mHomeFragment = HomeFragment()
-        val fragment = mFragmentManager.findFragmentByTag(HomeFragment::class.java.simpleName)
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState)
+        }
 
-        if (fragment !is HomeFragment) {
-            Log.d("User Hub", "Fragment Name : ${HomeFragment::class.java.simpleName}")
-            mFragmentManager.beginTransaction().apply {
-                add(R.id.frame_container, mHomeFragment, HomeFragment::class.java.simpleName)
-                commit()
+        toolbar.inflateMenu(R.menu.home_menu)
+        toolbar.inflateMenu(R.menu.language_menu)
+    }
+
+    override fun showAlertDialog(menuId: Int, tag: String) {
+        var mAlertDialog: AlertDialog? = null
+        val mBuilder: AlertDialog.Builder =
+            AlertDialog.Builder(this@MainActivity, R.style.MyPopupMenu)
+        when (menuId) {
+            R.id.menu_language -> {
+                mBuilder.setTitle(getString(R.string.choose_language))
+
+                val languages = arrayOf(
+                    getString(R.string.language_english),
+                    getString(R.string.language_indonesian)
+                )
+
+                val checkedItem = when (sharedPref?.getData(KEY_LANGUAGE)) {
+                    "en" -> 0
+                    "in" -> 1
+                    else -> 0
+                }
+
+                mBuilder.setSingleChoiceItems(languages, checkedItem) { _, which ->
+                    when (which) {
+                        0 -> sharedPref?.saveData(KEY_LANGUAGE, "en")
+                        1 -> sharedPref?.saveData(KEY_LANGUAGE, "in")
+                    }
+                    mAlertDialog?.dismiss()
+                    onRecreateActivity(tag)
+                }
             }
+        }
+        mAlertDialog = mBuilder.create()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+        mAlertDialog.show()
+    }
+
+    override fun onRecreateActivity(tag: String) {
+        when (tag) {
+            HomeFragment::class.java.simpleName -> {
+                val restartIntent = intent
+                this.finish()
+                startActivity(restartIntent)
+            }
+            else -> this.recreate()
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-            }
-        }
-        return super.onOptionsItemSelected(item)
+    override fun onChangeToolbarTitle(title: String?) {
+        toolbar.title = title
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if(supportActionBar?.title == "Home") {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(false)
+    override fun onChangeToolbarDisplayHome(display: Boolean) {
+        if (display) {
+            toolbar.navigationIcon = getDrawable(R.drawable.ic_arrow_back_white)
+            toolbar.setNavigationOnClickListener { onBackPressed() }
+        } else {
+            toolbar.navigationIcon = null
+            toolbar.setNavigationOnClickListener(null)
         }
+    }
+
+    override fun onChangeToolbarElevation(elevation: Float) {
+        toolbar.elevation = elevation
+    }
+
+    override fun inflateOptionsMenu(menu: Int) = toolbar.inflateMenu(menu)
+
+    override fun onOptionsMenuSelected(mListener: Toolbar.OnMenuItemClickListener) =
+        toolbar.setOnMenuItemClickListener(mListener)
+
+    override fun setMenuVisibility(menu: Int, visible: Boolean) {
+        toolbar.menu.findItem(menu).isVisible = visible
     }
 
     interface VolleyCallBack {

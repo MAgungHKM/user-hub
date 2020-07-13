@@ -1,10 +1,12 @@
-package com.hkm.userhub.model.repo
+package com.hkm.userhub.model.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hkm.userhub.R
+import com.hkm.userhub.model.Repo
+import com.hkm.userhub.tools.setOnSingleClickListener
 import kotlinx.android.synthetic.main.item_repo.view.*
 
 class RepoAdapter :
@@ -36,7 +38,7 @@ class RepoAdapter :
 
         holder.bindRepo(repo)
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             onItemClickCallback.onItemClicked(listRepo[holder.adapterPosition])
         }
     }

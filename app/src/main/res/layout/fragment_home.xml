@@ -9,6 +9,18 @@
     android:focusableInTouchMode="true"
     tools:context=".ui.home.HomeFragment">
 
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/github_mark_grey"
+        android:contentDescription="@string/home_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         style="@style/MyEditText"
         android:id="@+id/edt_search"

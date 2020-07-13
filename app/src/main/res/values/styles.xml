@@ -1,18 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:windowBackground">@color/colorBackground</item>
-        <item name="android:statusBarColor">@color/colorStatusBar</item>
-        <item name="android:navigationBarColor">@color/colorStatusBar</item>
+        <item name="android:statusBarColor">@color/colorActionBar</item>
+        <item name="android:navigationBarColor">@color/colorActionBar</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
+        <item name="android:itemBackground">@color/colorCard</item>
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -21,5 +21,12 @@
 
     <style name="MyEditText" parent="@style/Widget.AppCompat.EditText">
         <item name="android:background">@drawable/rounded_edit_text</item>
+    </style>
+    
+    <style name="MyPopupMenu" parent="@style/Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorCard</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="textColorAlertDialogListItem">@color/colorTextPrimary</item>
     </style>
 </resources>

@@ -2,37 +2,50 @@ package com.hkm.userhub.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hkm.userhub.MainActivity
 import com.hkm.userhub.MainActivity.VolleyCallBack
-import com.hkm.userhub.NavigationHelper
 import com.hkm.userhub.R
-import com.hkm.userhub.model.user.User
-import com.hkm.userhub.model.user.UserAdapter
-import com.hkm.userhub.ui.ItemSnaperHelper
-import com.hkm.userhub.ui.detail.DetailFragment
+import com.hkm.userhub.model.User
+import com.hkm.userhub.model.adapter.UserAdapter
+import com.hkm.userhub.tools.ItemSnaperHelper
+import com.hkm.userhub.tools.NavigationHelper
+import com.hkm.userhub.tools.OnMyFragmentListener
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.progress_bar
-import kotlinx.android.synthetic.main.fragment_home.tv_not_found
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var userAdapter: UserAdapter
     private lateinit var homeViewModel: HomeViewModel
+    private var mOnMyFragmentListener: OnMyFragmentListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnMyFragmentListener) {
+            mOnMyFragmentListener = context
+        } else {
+            throw RuntimeException(
+                "$context must implement OnFragmentInteractionListener"
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance((activity as AppCompatActivity).application)).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance((activity as MainActivity).application)
+        ).get(HomeViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -43,15 +56,17 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        parentFragmentManager.addOnBackStackChangedListener {
-            val topFragment = NavigationHelper.getCurrentTopFragment(parentFragmentManager)
+        val mFragmentManager = parentFragmentManager
+        mFragmentManager.addOnBackStackChangedListener {
+            val topFragment = NavigationHelper.getCurrentTopFragment(mFragmentManager)
             if (topFragment != null) {
                 if (topFragment is HomeFragment) {
-                    home_layout.visibility = View.VISIBLE
+                    if (activity != null) {
+                        mOnMyFragmentListener?.onChangeToolbarDisplayHome(false)
+                    }
                 }
             }
         }
@@ -65,7 +80,8 @@ class HomeFragment : Fragment() {
             override fun onEditorAction(view: TextView, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     edt_search.clearFocus()
-                    val key: InputMethodManager? = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                    val key: InputMethodManager? =
+                        activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
                     key?.hideSoftInputFromWindow(edt_search.windowToken, 0)
                     tv_not_found.visibility = View.GONE
                     rv_users.visibility = View.GONE
@@ -73,8 +89,8 @@ class HomeFragment : Fragment() {
                     homeViewModel.searchUser(view.text.toString(), object : VolleyCallBack {
                         override fun onSuccess() {
                             if (rv_users != null && progress_bar != null) {
-                                showLoading(false)
                                 showUserList()
+                                showLoading(false)
                             }
                         }
                     })
@@ -97,7 +113,37 @@ class HomeFragment : Fragment() {
             }
         })
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Home"
+
+        homeViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+            }
+        })
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_home))
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+        mOnMyFragmentListener?.onOptionsMenuSelected(this)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_language -> {
+                mOnMyFragmentListener?.showAlertDialog(
+                    R.id.menu_language,
+                    HomeFragment::class.java.simpleName
+                )
+                true
+            }
+            R.id.menu_home -> {
+                view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                true
+            }
+            else -> true
+        }
     }
 
     private fun showLoading(state: Boolean) {
@@ -108,30 +154,29 @@ class HomeFragment : Fragment() {
     }
 
     private fun showUserList() {
-        rv_users.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL,  false)
+        rv_users.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_users.adapter = userAdapter
 
         userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(user: User) {
-                showSelectedUser(user)
+                showSelectedUser(user.username)
             }
         })
     }
 
-    private fun showSelectedUser(user: User) {
-        val mDetailFragment = DetailFragment()
+    private fun showSelectedUser(username: String) {
+        val toDetailFragment = HomeFragmentDirections.actionHomeFragmentToDetailFragment()
+        toDetailFragment.username = username
 
-        val mBundle = Bundle()
-        mBundle.putParcelable(DetailFragment.EXTRA_USER, user)
-
-        mDetailFragment.arguments = mBundle
-
-        val mFragmentManager = parentFragmentManager
-        mFragmentManager.beginTransaction().apply {
-            add(R.id.frame_container, mDetailFragment, DetailFragment::class.java.simpleName)
-            addToBackStack(null)
-            commit()
-            home_layout.visibility = View.GONE
+        view?.findNavController()?.navigate(toDetailFragment).apply {
+            mOnMyFragmentListener?.onChangeToolbarTitle(username)
+            mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, true)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mOnMyFragmentListener = null
     }
 }
