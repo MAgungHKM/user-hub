@@ -18,7 +18,7 @@ import org.json.JSONException
 
 class HomeViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
-        private const val TOKEN = "token f5a17709f126ba686a2404a2c74dde99cad945e6"
+        private const val TOKEN = "token 3e937ae4772cc9bcad5efbc79e4a48cd842c4e54"
         private var TAG = HomeViewModel::class.java.simpleName
     }
 

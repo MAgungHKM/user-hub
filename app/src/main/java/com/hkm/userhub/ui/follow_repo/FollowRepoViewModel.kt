@@ -16,9 +16,9 @@ import com.hkm.userhub.tools.Event
 import com.hkm.userhub.ui.detail.DetailViewModel
 import org.json.JSONException
 
-class FollowRepoViewModel(private val mApplication: Application) : AndroidViewModel(mApplication) {
+class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
-        private const val TOKEN = "token f5a17709f126ba686a2404a2c74dde99cad945e6"
+        private const val TOKEN = "token 3e937ae4772cc9bcad5efbc79e4a48cd842c4e54"
         private var TAG = DetailViewModel::class.java.simpleName
     }
 
