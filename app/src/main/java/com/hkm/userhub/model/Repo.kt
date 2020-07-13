@@ -5,8 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Repo(
-    val name: String = "",
-    val description: String = "",
-    val repoLink: String = "",
-    val stargazers: String = ""
+    var name: String = "",
+    var description: String = "",
+    var repoLink: String = "",
+    var stargazers: String = ""
 ) : Parcelable
