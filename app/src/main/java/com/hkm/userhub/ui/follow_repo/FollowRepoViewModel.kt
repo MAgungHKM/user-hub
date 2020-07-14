@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.*
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.hkm.userhub.BuildConfig
 import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
 import com.hkm.userhub.model.Repo
@@ -18,7 +19,10 @@ import org.json.JSONException
 
 class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
-        private const val TOKEN = "token 3e937ae4772cc9bcad5efbc79e4a48cd842c4e54"
+        private const val TOKEN = BuildConfig.GITHUB_TOKEN
+        private const val followersApi = "https://api.github.com/users/<USERNAME>/followers"
+        private const val followingApi = "https://api.github.com/users/<USERNAME>/following"
+        private const val repositoriesApi = "https://api.github.com/users/<USERNAME>/repos"
         private var TAG = DetailViewModel::class.java.simpleName
     }
 
@@ -35,7 +39,7 @@ class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplica
     fun setListOfFollowers(username: String, callBack: VolleyCallBack) {
         Log.d(TAG, "getListOfFollowers: Obtaining.....")
         val listFollowers = ArrayList<User>()
-        val url = "https://api.github.com/users/$username/followers"
+        val url = followersApi.replace("<USERNAME>", username)
         val request =
             object : JsonArrayRequest(Method.GET, url, null, Response.Listener { response ->
                 try {
@@ -89,7 +93,7 @@ class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplica
     fun setListOfFollowing(username: String, callBack: VolleyCallBack) {
         Log.d(TAG, "getListOfFollowing: Obtaining.....")
         val listFollowing = ArrayList<User>()
-        val url = "https://api.github.com/users/$username/following"
+        val url = followingApi.replace("<USERNAME>", username)
         val request =
             object : JsonArrayRequest(Method.GET, url, null, Response.Listener { response ->
                 try {
@@ -143,7 +147,7 @@ class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplica
     fun setListOfRepositories(username: String) {
         Log.d(TAG, "getListOfRepositories: Obtaining.....")
         val listRepositories = ArrayList<Repo>()
-        val url = "https://api.github.com/users/$username/repos"
+        val url = repositoriesApi.replace("<USERNAME>", username)
         val request =
             object : JsonArrayRequest(Method.GET, url, null, Response.Listener { response ->
                 try {

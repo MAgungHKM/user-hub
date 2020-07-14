@@ -9,6 +9,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.hkm.userhub.BuildConfig
 import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
 import com.hkm.userhub.model.User
@@ -18,7 +19,9 @@ import org.json.JSONException
 
 class HomeViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
-        private const val TOKEN = "token 3e937ae4772cc9bcad5efbc79e4a48cd842c4e54"
+        private const val TOKEN = BuildConfig.GITHUB_TOKEN
+        private const val searchApi = "https://api.github.com/search/users?q=<SEARCH_KEY>"
+        private const val followersApi = "https://api.github.com/users/<USERNAME>/followers"
         private var TAG = HomeViewModel::class.java.simpleName
     }
 
@@ -34,7 +37,7 @@ class HomeViewModel(mApplication: Application) : AndroidViewModel(mApplication) 
     fun searchUser(input: String, callBack: VolleyCallBack) {
         Log.d(TAG, "searchUser: Searching.....")
         val listUser = ArrayList<User>()
-        val url = "https://api.github.com/search/users?q=$input"
+        val url = searchApi.replace("<SEARCH_KEY>", input)
         val request =
             object : JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->
                 try {
@@ -89,7 +92,7 @@ class HomeViewModel(mApplication: Application) : AndroidViewModel(mApplication) 
 
     fun getFollowersCount(username: String, callBack: VolleyCallBack) {
         Log.d(TAG, "getFollowerCount: Counting.....")
-        val url = "https://api.github.com/users/$username/followers"
+        val url = followersApi.replace("<USERNAME>", username)
         val request = object : JsonArrayRequest(
             Method.GET,
             url,

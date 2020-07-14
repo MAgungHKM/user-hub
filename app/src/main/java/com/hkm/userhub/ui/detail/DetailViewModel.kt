@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.hkm.userhub.BuildConfig
 import com.hkm.userhub.R
 import com.hkm.userhub.model.User
 import com.hkm.userhub.tools.Event
@@ -15,7 +16,8 @@ import org.json.JSONException
 
 class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
-        private const val TOKEN = "token 3e937ae4772cc9bcad5efbc79e4a48cd842c4e54"
+        private const val TOKEN = BuildConfig.GITHUB_TOKEN
+        private const val detailApi = "https://api.github.com/users/<USERNAME>"
         private var TAG = DetailViewModel::class.java.simpleName
     }
 
@@ -29,7 +31,7 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
     fun getUserDetail(username: String): LiveData<User> {
         val user = User()
         Log.d(TAG, "getUserDetail: Loading.....")
-        val url = "https://api.github.com/users/$username"
+        val url = detailApi.replace("<USERNAME>", username)
         val request =
             object : JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->
                 try {
