@@ -10,10 +10,10 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.hkm.userhub.BuildConfig
-import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
-import com.hkm.userhub.model.User
+import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.Event
+import com.hkm.userhub.ui.MainActivity.VolleyCallBack
 import org.json.JSONException
 
 

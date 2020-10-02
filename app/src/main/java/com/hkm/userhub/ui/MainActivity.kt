@@ -1,10 +1,12 @@
-package com.hkm.userhub
+package com.hkm.userhub.ui
 
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import com.hkm.userhub.R
 import com.hkm.userhub.tools.ContentWrapper
 import com.hkm.userhub.tools.OnMyFragmentListener
 import com.hkm.userhub.tools.SharedPreferences
@@ -35,8 +37,7 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
             onRestoreInstanceState(savedInstanceState)
         }
 
-        toolbar.inflateMenu(R.menu.home_menu)
-        toolbar.inflateMenu(R.menu.language_menu)
+        toolbar.inflateMenu(R.menu.main_menu)
     }
 
     override fun showAlertDialog(menuId: Int, tag: String) {
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
 
     override fun onChangeToolbarDisplayHome(display: Boolean) {
         if (display) {
-            toolbar.navigationIcon = getDrawable(R.drawable.ic_arrow_back_white)
+            toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white)
             toolbar.setNavigationOnClickListener { onBackPressed() }
         } else {
             toolbar.navigationIcon = null
@@ -109,6 +110,10 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
 
     override fun setMenuVisibility(menu: Int, visible: Boolean) {
         toolbar.menu.findItem(menu).isVisible = visible
+    }
+
+    override fun setGroupMenuVisibility(groupId: Int, visible: Boolean) {
+        toolbar.menu.setGroupVisible(groupId, visible)
     }
 
     interface VolleyCallBack {

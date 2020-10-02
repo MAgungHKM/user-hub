@@ -1,4 +1,4 @@
-package com.hkm.userhub.model.adapter
+package com.hkm.userhub.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
-import com.hkm.userhub.model.User
+import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.setOnSingleClickListener
 
 import kotlinx.android.synthetic.main.item_user.view.*

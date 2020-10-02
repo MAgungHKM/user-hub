@@ -9,18 +9,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hkm.userhub.MainActivity
-import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
-import com.hkm.userhub.model.User
-import com.hkm.userhub.model.adapter.UserAdapter
+import com.hkm.userhub.adapter.UserAdapter
+import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.ItemSnaperHelper
 import com.hkm.userhub.tools.NavigationHelper
 import com.hkm.userhub.tools.OnMyFragmentListener
+import com.hkm.userhub.ui.MainActivity
+import com.hkm.userhub.ui.MainActivity.VolleyCallBack
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -100,7 +99,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             }
         })
 
-        homeViewModel.getSearchResult().observe(viewLifecycleOwner, Observer { users ->
+        homeViewModel.getSearchResult().observe(viewLifecycleOwner, { users ->
             if (users.isNotEmpty()) {
                 userAdapter.setData(users)
                 showUserList()
@@ -114,7 +113,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         })
 
 
-        homeViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+        homeViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
             }
@@ -126,6 +125,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onResume()
         mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_home))
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, true)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }
 
@@ -140,6 +140,17 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             }
             R.id.menu_home -> {
                 view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                true
+            }
+            R.id.menu_favorite -> {
+                view?.findNavController()
+                    ?.navigate(HomeFragmentDirections.actionHomeFragmentToFavoriteFragment())
+                    .apply {
+                        mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_favorite))
+                        mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, true)
+                    }
                 true
             }
             else -> true

@@ -9,17 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hkm.userhub.MainActivity.VolleyCallBack
 import com.hkm.userhub.R
-import com.hkm.userhub.model.Repo
-import com.hkm.userhub.model.User
-import com.hkm.userhub.model.adapter.RepoAdapter
-import com.hkm.userhub.model.adapter.UserAdapter
+import com.hkm.userhub.adapter.RepoAdapter
+import com.hkm.userhub.adapter.UserAdapter
+import com.hkm.userhub.entitiy.Repo
+import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.ItemSnaperHelper
+import com.hkm.userhub.ui.MainActivity.VolleyCallBack
 import com.hkm.userhub.ui.detail.DetailFragmentDirections
 import kotlinx.android.synthetic.main.fragment_follow_repo.*
 
@@ -97,7 +96,7 @@ class FollowRepoFragment : Fragment() {
                 })
 
                 followRepoViewModel.getListOfFollowers()
-                    .observe(viewLifecycleOwner, Observer { users ->
+                    .observe(viewLifecycleOwner, { users ->
                         if (users.isNotEmpty()) {
                             followersAdapter.setData(users)
                             tv_not_found.visibility = View.GONE
@@ -121,7 +120,7 @@ class FollowRepoFragment : Fragment() {
                 })
 
                 followRepoViewModel.getListOfFollowing()
-                    .observe(viewLifecycleOwner, Observer { users ->
+                    .observe(viewLifecycleOwner, { users ->
                         if (users.isNotEmpty()) {
                             followingAdapter.setData(users)
                             tv_not_found.visibility = View.GONE
@@ -138,7 +137,7 @@ class FollowRepoFragment : Fragment() {
                 followRepoViewModel.setListOfRepositories(username)
 
                 followRepoViewModel.getListOfRepositories()
-                    .observe(viewLifecycleOwner, Observer { repos ->
+                    .observe(viewLifecycleOwner, { repos ->
                         for (repo in repos) {
                             if (repo.description == "null")
                                 repo.description = getString(R.string.description_not_found)
@@ -158,7 +157,7 @@ class FollowRepoFragment : Fragment() {
             else -> tv_not_found.text = getString(R.string.tab_index_out_of_bounds)
         }
 
-        followRepoViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+        followRepoViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
             }

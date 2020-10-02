@@ -1,4 +1,4 @@
-package com.hkm.userhub.model.adapter
+package com.hkm.userhub.adapter
 
 import android.content.Context
 import android.os.Bundle

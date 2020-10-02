@@ -1,11 +1,11 @@
-package com.hkm.userhub.model.adapter
+package com.hkm.userhub.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hkm.userhub.R
-import com.hkm.userhub.model.Repo
+import com.hkm.userhub.entitiy.Repo
 import com.hkm.userhub.tools.setOnSingleClickListener
 import kotlinx.android.synthetic.main.item_repo.view.*
 

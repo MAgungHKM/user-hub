@@ -11,4 +11,5 @@ interface OnMyFragmentListener {
     fun inflateOptionsMenu(menu: Int)
     fun showAlertDialog(menuId: Int, tag: String)
     fun setMenuVisibility(menu: Int, visible: Boolean)
+    fun setGroupMenuVisibility(groupId: Int, visible: Boolean)
 }

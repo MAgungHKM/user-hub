@@ -10,8 +10,10 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.hkm.userhub.BuildConfig
 import com.hkm.userhub.R
-import com.hkm.userhub.model.User
+import com.hkm.userhub.db.UserRepository
+import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.Event
+import io.realm.Realm
 import org.json.JSONException
 
 class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
@@ -24,6 +26,8 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
     private val user = MutableLiveData<User>()
     private val requestQueue = Volley.newRequestQueue(mApplication.applicationContext)
     private val statusMessage = MutableLiveData<Event<Int>>()
+    private val realm = Realm.getDefaultInstance()
+    private val userRepository = UserRepository(realm)
 
     val message: LiveData<Event<Int>>
         get() = statusMessage
@@ -50,6 +54,9 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
                     val company = response.getString("company")
                     user.company = company
 
+                    val followersCount = response.getString("followers")
+                    user.followersCount = followersCount
+
                     this.user.postValue(user)
                     Log.d(TAG, "getUserDetail: Success")
                 } catch (e: JSONException) {
@@ -74,5 +81,23 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
         requestQueue.add(request)
 
         return this.user
+    }
+
+    fun insertFavorite(user: User) {
+        userRepository.insertFavorite(user)
+        statusMessage.value = Event(R.string.add_favorite)
+    }
+
+    fun deleteFavorite(username: String) {
+        userRepository.deleteFavoriteByUsername(username)
+        statusMessage.value = Event(R.string.del_favorite)
+    }
+
+    fun isFavoriteExist(username: String): Boolean =
+        userRepository.getFavoriteByUsername(username) != null
+
+    override fun onCleared() {
+        realm.close()
+        super.onCleared()
     }
 }

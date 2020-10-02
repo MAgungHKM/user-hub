@@ -1,4 +1,4 @@
-package com.hkm.userhub.model
+package com.hkm.userhub.entitiy
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

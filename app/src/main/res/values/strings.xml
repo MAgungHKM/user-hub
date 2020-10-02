@@ -33,4 +33,9 @@
     <string name="choose_language">Choose Language</string>
     <string name="language_english">English</string>
     <string name="language_indonesian">Bahasa Indonesia</string>
+
+    <string name="menu_favorite">Favorite</string>
+    <string name="add_favorite">User has been added to Favorite</string>
+    <string name="del_favorite">User has been deleted from Favorite</string>
+    <string name="favorite_icon" translatable="false">favorite_icon</string>
 </resources>

@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
-import com.hkm.userhub.model.adapter.SectionsPagerAdapter
+import com.hkm.userhub.adapter.SectionsPagerAdapter
 import com.hkm.userhub.tools.OnMyFragmentListener
 import com.hkm.userhub.ui.follow_repo.FollowRepoFragment
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -58,7 +58,7 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         showLoading(true)
 
-        detailViewModel.message.observe(viewLifecycleOwner, Observer { event ->
+        detailViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
             }
@@ -67,7 +67,7 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         if (arguments != null) {
             val username = DetailFragmentArgs.fromBundle(arguments as Bundle).username
 
-            detailViewModel.getUserDetail(username).observe(viewLifecycleOwner, Observer { user ->
+            detailViewModel.getUserDetail(username).observe(viewLifecycleOwner, { user ->
                 if (user.name == "null") {
                     mOnMyFragmentListener?.onChangeToolbarTitle(user.username)
                     tv_name.text = user.username
@@ -92,6 +92,17 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                     .load(user.avatar)
                     .apply(RequestOptions().override(500, 500))
                     .into(img_avatar)
+
+                btn_favorite.setOnClickListener {
+                    val anim = AnimationUtils.loadAnimation(it.context, R.anim.favorite_anim)
+                    btn_favorite.startAnimation(anim)
+                    if (!detailViewModel.isFavoriteExist(user.username)) {
+                        detailViewModel.insertFavorite(user)
+                    } else {
+                        detailViewModel.deleteFavorite(user.username)
+                        Toast.makeText(context, "User Exist", Toast.LENGTH_LONG).show()
+                    }
+                }
 
                 setupSectionsPager(user.username)
 
@@ -134,6 +145,7 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         )
         sectionsPagerAdapter.notifyDataSetChanged()
         view_pager.adapter = sectionsPagerAdapter
+        view_pager.offscreenPageLimit = 3
         tab_layout.setupWithViewPager(view_pager, true)
 
         mOnMyFragmentListener?.onChangeToolbarElevation(0f)
