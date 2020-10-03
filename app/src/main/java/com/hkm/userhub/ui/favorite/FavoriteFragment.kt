@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +54,13 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         showLoading(true)
 
-        userAdapter = UserAdapter()
+        favoriteViewModel.message.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        userAdapter = UserAdapter(true)
         userAdapter.notifyDataSetChanged()
 
         ItemSnaperHelper().attachToRecyclerView(rv_users)
@@ -104,9 +111,20 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_users.adapter = userAdapter
 
-        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+        userAdapter.setOnClickCallback(object : UserAdapter.OnClickCallback {
             override fun onItemClicked(user: User) {
                 showSelectedUser(user.username)
+            }
+
+            override fun onDeleteClicked(user: User) {
+                favoriteViewModel.deleteFavorite(user.username)
+                favoriteViewModel.fetchDataFromRealm()
+                favoriteViewModel.getListFavorite().observe(viewLifecycleOwner, { favorites ->
+                    favorites?.let {
+                        userAdapter.setData(it)
+                    }
+                })
+
             }
         })
     }

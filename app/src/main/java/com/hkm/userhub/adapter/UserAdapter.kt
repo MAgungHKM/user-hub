@@ -8,17 +8,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
 import com.hkm.userhub.entitiy.User
-import com.hkm.userhub.tools.setOnSingleClickListener
 
 import kotlinx.android.synthetic.main.item_user.view.*
+import java.lang.ref.WeakReference
 
-class UserAdapter :
+class UserAdapter(private val showDivider: Boolean = false) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
-    private lateinit var onItemClickCallback: OnItemClickCallback
+    private lateinit var onClickCallback: OnClickCallback
     private val listUser = ArrayList<User>()
 
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
+    fun setOnClickCallback(onClickCallback: OnClickCallback) {
+        this.onClickCallback = onClickCallback
     }
 
     fun setData(users: ArrayList<User>) {
@@ -39,14 +39,34 @@ class UserAdapter :
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = listUser[position]
 
+        holder.showDivider(showDivider)
         holder.bindUser(user)
-        holder.itemView.setOnSingleClickListener {
-            onItemClickCallback.onItemClicked(listUser[holder.adapterPosition])
-        }
+
+//        if (showDivider) {
+//            holder.bindUser(user)
+//            holder.itemView.setOnSingleClickListener {
+//                if (it.id == holder.itemView.btn_delete.id)
+//                    onClickCallback.onItemClicked(listUser[holder.adapterPosition])
+//                else
+//                    onClickCallback.onItemClicked(listUser[holder.adapterPosition])
+//            }
+//        } else {
+//            holder.bindUser(user)
+//            holder.itemView.setOnSingleClickListener {
+//                onClickCallback.onItemClicked(listUser[holder.adapterPosition])
+//            }
+//        }
     }
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        private val onClickWeakCallback: WeakReference<OnClickCallback> =
+            WeakReference(onClickCallback)
+
         fun bindUser(user: User) {
+            itemView.setOnClickListener(this)
+            itemView.btn_delete.setOnClickListener(this)
+
             with(itemView) {
                 tv_username.text = user.username
                 tv_followers.text = user.followersCount
@@ -61,9 +81,29 @@ class UserAdapter :
                     .into(img_avatar)
             }
         }
+
+        fun showDivider(show: Boolean) {
+            if (show) {
+                with(itemView) {
+                    divider.visibility = View.VISIBLE
+                }
+            } else {
+                with(itemView) {
+                    divider.visibility = View.GONE
+                }
+            }
+        }
+
+        override fun onClick(v: View) {
+            if (v.id == itemView.btn_delete.id)
+                onClickWeakCallback.get()?.onDeleteClicked(listUser[adapterPosition])
+            else
+                onClickWeakCallback.get()?.onItemClicked(listUser[adapterPosition])
+        }
     }
 
-    interface OnItemClickCallback {
+    interface OnClickCallback {
         fun onItemClicked(user: User)
+        fun onDeleteClicked(user: User)
     }
 }

@@ -178,8 +178,12 @@ class FollowRepoFragment : Fragment() {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_user_repo.adapter = followersAdapter
 
-        followersAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+        followersAdapter.setOnClickCallback(object : UserAdapter.OnClickCallback {
             override fun onItemClicked(user: User) {
+                showSelectedUser(user)
+            }
+
+            override fun onDeleteClicked(user: User) {
                 showSelectedUser(user)
             }
         })
@@ -190,8 +194,12 @@ class FollowRepoFragment : Fragment() {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_user_repo.adapter = followingAdapter
 
-        followingAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+        followingAdapter.setOnClickCallback(object : UserAdapter.OnClickCallback {
             override fun onItemClicked(user: User) {
+                showSelectedUser(user)
+            }
+
+            override fun onDeleteClicked(user: User) {
                 showSelectedUser(user)
             }
         })

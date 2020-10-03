@@ -169,8 +169,12 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         rv_users.adapter = userAdapter
 
-        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+        userAdapter.setOnClickCallback(object : UserAdapter.OnClickCallback {
             override fun onItemClicked(user: User) {
+                showSelectedUser(user.username)
+            }
+
+            override fun onDeleteClicked(user: User) {
                 showSelectedUser(user.username)
             }
         })

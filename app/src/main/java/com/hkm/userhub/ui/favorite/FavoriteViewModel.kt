@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.hkm.userhub.R
 import com.hkm.userhub.db.UserRepository
 import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.Event
@@ -23,9 +24,17 @@ class FavoriteViewModel(mApplication: Application) : AndroidViewModel(mApplicati
     val message: LiveData<Event<Int>>
         get() = statusMessage
 
-    fun fetchDataFromRealm() {
-        listFavorite.postValue(userRepository.getAllFavorite())
-    }
+    fun fetchDataFromRealm() = listFavorite.postValue(userRepository.getAllFavorite())
 
     fun getListFavorite(): LiveData<ArrayList<User>> = listFavorite
+
+    fun deleteFavorite(username: String) {
+        userRepository.deleteFavoriteByUsername(username)
+        statusMessage.value = Event(R.string.del_favorite)
+    }
+
+    override fun onCleared() {
+        realm.close()
+        super.onCleared()
+    }
 }
