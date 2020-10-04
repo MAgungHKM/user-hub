@@ -3,14 +3,15 @@ package com.hkm.userhub.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hkm.userhub.R
 import com.hkm.userhub.entitiy.User
-
 import kotlinx.android.synthetic.main.item_user.view.*
 import java.lang.ref.WeakReference
+
 
 class UserAdapter(private val showDivider: Boolean = false) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -95,9 +96,22 @@ class UserAdapter(private val showDivider: Boolean = false) :
         }
 
         override fun onClick(v: View) {
-            if (v.id == itemView.btn_delete.id)
-                onClickWeakCallback.get()?.onDeleteClicked(listUser[adapterPosition])
-            else
+            if (v.id == itemView.btn_delete.id) {
+                val alert: AlertDialog.Builder = AlertDialog.Builder(v.context, R.style.MyPopupMenu)
+
+                alert.setTitle(v.context.getString(R.string.dial_delete))
+                alert.setMessage(v.context.getString(R.string.dial_delete_text))
+
+                alert.setPositiveButton(v.context.getString(R.string.del_confirm_yes)) { _, _ ->
+                    onClickWeakCallback.get()?.onDeleteClicked(listUser[adapterPosition])
+                }
+
+                alert.setNegativeButton(v.context.getString(R.string.del_confrim_no)) { dialog, _ ->
+                    dialog.cancel()
+                }
+
+                alert.show()
+            } else
                 onClickWeakCallback.get()?.onItemClicked(listUser[adapterPosition])
         }
     }

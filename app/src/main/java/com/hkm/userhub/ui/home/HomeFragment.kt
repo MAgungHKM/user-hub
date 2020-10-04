@@ -77,7 +77,9 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         edt_search.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(view: TextView, actionId: Int, event: KeyEvent?): Boolean {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)
+                ) {
                     edt_search.clearFocus()
                     val key: InputMethodManager? =
                         activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
@@ -125,6 +127,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onResume()
         mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_home))
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, true)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }

@@ -35,6 +35,15 @@
     <string name="language_indonesian">Bahasa Indonesia</string>
 
     <string name="menu_favorite">Favorit</string>
-    <string name="add_favorite">User ditambahkan ke Favorit</string>
-    <string name="del_favorite">User dihapus dari Favorit</string>
+    <string name="add_favorite">%1$s ditambahkan ke Favorit</string>
+    <string name="del_favorite">%1$s dihapus dari Favorit</string>
+    <string name="del_confirm_yes">IYA</string>
+    <string name="dial_delete">Hapus Favorit</string>
+    <string name="dial_delete_text">Apakah anda yakin untuk menghapus user ini dari Favorit?</string>
+    <string name="del_confrim_no">TIDAK</string>
+    <string name="menu_delete_all">Hapus Semua</string>
+    <string name="dial_delete_all_favorite">Hapus Semua Favorit</string>
+    <string name="dial_delete_all_favorite_text">Apakah anda yakin untuk menghapus semua user Favorit?</string>
+    <string name="del_favorite_all">Semua favorit sudah dihapus.</string>
+    <string name="favorite_not_found">Anda tidak memiliki user Favorit.</string>
 </resources>

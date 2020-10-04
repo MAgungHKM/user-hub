@@ -60,7 +60,7 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         detailViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
-                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -68,6 +68,9 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             val username = DetailFragmentArgs.fromBundle(arguments as Bundle).username
 
             detailViewModel.getUserDetail(username).observe(viewLifecycleOwner, { user ->
+                if (detailViewModel.isFavoriteExist(user.username))
+                    btn_favorite.setImageResource(R.drawable.ic_favorite_white)
+
                 if (user.name == "null") {
                     mOnMyFragmentListener?.onChangeToolbarTitle(user.username)
                     tv_name.text = user.username
@@ -98,9 +101,10 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                     btn_favorite.startAnimation(anim)
                     if (!detailViewModel.isFavoriteExist(user.username)) {
                         detailViewModel.insertFavorite(user)
+                        btn_favorite.setImageResource(R.drawable.ic_favorite_white)
                     } else {
                         detailViewModel.deleteFavorite(user.username)
-                        Toast.makeText(context, "User Exist", Toast.LENGTH_LONG).show()
+                        btn_favorite.setImageResource(R.drawable.ic_favorite_border_white)
                     }
                 }
 
@@ -114,6 +118,8 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     override fun onResume() {
         super.onResume()
         mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }
 

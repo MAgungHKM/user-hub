@@ -13,4 +13,6 @@ class UserRepository(realm: Realm) {
     fun getFavoriteByUsername(username: String): User? = userDao.getUser(username)
 
     fun deleteFavoriteByUsername(username: String) = userDao.deleteUser(username)
+
+    fun deleteAllFavorite() = userDao.deleteAll()
 }

@@ -15,6 +15,11 @@
             android:icon="@drawable/ic_favorite_white"
             app:showAsAction="ifRoom" />
         <item
+            android:id="@+id/menu_delete_all"
+            android:title="@string/menu_delete_all"
+            android:icon="@drawable/ic_delete_white"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/menu_language"
             android:title="@string/language" />
     </group>

@@ -166,7 +166,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="12dp"
             android:contentDescription="@string/favorite_icon"
-            android:src="@drawable/ic_delete_white"
+            android:src="@drawable/ic_delete_white_small"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

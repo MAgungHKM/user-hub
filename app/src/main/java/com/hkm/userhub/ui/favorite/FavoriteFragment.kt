@@ -17,7 +17,7 @@ import com.hkm.userhub.adapter.UserAdapter
 import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.ItemSnaperHelper
 import com.hkm.userhub.tools.OnMyFragmentListener
-import com.hkm.userhub.ui.detail.DetailFragment
+import com.hkm.userhub.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
@@ -65,12 +65,15 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         ItemSnaperHelper().attachToRecyclerView(rv_users)
 
-        favoriteViewModel.fetchDataFromRealm()
-
         favoriteViewModel.getListFavorite().observe(viewLifecycleOwner, { favorites ->
             favorites?.let {
-                userAdapter.setData(it)
-                showUserList()
+                if (it.isNotEmpty()) {
+                    userAdapter.setData(it)
+                    tv_not_found.visibility = View.GONE
+                    showUserList()
+                } else {
+                    tv_not_found.visibility = View.VISIBLE
+                }
                 showLoading(false)
             }
         })
@@ -79,6 +82,7 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     override fun onResume() {
         super.onResume()
         mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, true)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }
 
@@ -87,12 +91,34 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             R.id.menu_language -> {
                 mOnMyFragmentListener?.showAlertDialog(
                     R.id.menu_language,
-                    DetailFragment::class.java.simpleName
+                    FavoriteFragment::class.java.simpleName
                 )
                 true
             }
             R.id.menu_home -> {
                 view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                true
+            }
+            R.id.menu_delete_all -> {
+                mOnMyFragmentListener?.showAlertDialog(
+                    R.id.menu_delete_all,
+                    FavoriteFragment::class.java.simpleName
+                )
+
+                mOnMyFragmentListener?.setOnAlertConfirmDialog(object :
+                    MainActivity.OnAlertConfirmDialog {
+                    override fun onTrue() {
+                        favoriteViewModel.deleteAllFavorite()
+                        favoriteViewModel.getListFavorite()
+                            .observe(viewLifecycleOwner, { favorites ->
+                                favorites?.let {
+                                    userAdapter.setData(it)
+                                }
+                            })
+                    }
+
+                    override fun onFalse() {}
+                })
                 true
             }
             else -> true
@@ -118,13 +144,11 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
             override fun onDeleteClicked(user: User) {
                 favoriteViewModel.deleteFavorite(user.username)
-                favoriteViewModel.fetchDataFromRealm()
                 favoriteViewModel.getListFavorite().observe(viewLifecycleOwner, { favorites ->
                     favorites?.let {
                         userAdapter.setData(it)
                     }
                 })
-
             }
         })
     }

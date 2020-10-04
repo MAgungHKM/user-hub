@@ -35,7 +35,16 @@
     <string name="language_indonesian">Bahasa Indonesia</string>
 
     <string name="menu_favorite">Favorite</string>
-    <string name="add_favorite">User has been added to Favorite</string>
-    <string name="del_favorite">User has been deleted from Favorite</string>
+    <string name="add_favorite">%1$s has been added to Favorite</string>
+    <string name="del_favorite">%1$s has been deleted from Favorite</string>
     <string name="favorite_icon" translatable="false">favorite_icon</string>
+    <string name="del_confirm_yes">YES</string>
+    <string name="dial_delete">Delete Favorite</string>
+    <string name="dial_delete_text">Are you sure you want to delete this user from Favorite?</string>
+    <string name="del_confrim_no">NO</string>
+    <string name="menu_delete_all">Delete All</string>
+    <string name="dial_delete_all_favorite">Delete All Favorite</string>
+    <string name="dial_delete_all_favorite_text">Are you user you want to delete all user from Favorite?</string>
+    <string name="del_favorite_all">All user has been deleted from Favorite</string>
+    <string name="favorite_not_found">There are no user in your Favorite.</string>
 </resources>

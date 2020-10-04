@@ -16,7 +16,7 @@ import com.hkm.userhub.tools.Event
 import io.realm.Realm
 import org.json.JSONException
 
-class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication) {
+class DetailViewModel(private val mApplication: Application) : AndroidViewModel(mApplication) {
     companion object {
         private const val TOKEN = BuildConfig.GITHUB_TOKEN
         private const val detailApi = "https://api.github.com/users/<USERNAME>"
@@ -25,11 +25,18 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
 
     private val user = MutableLiveData<User>()
     private val requestQueue = Volley.newRequestQueue(mApplication.applicationContext)
-    private val statusMessage = MutableLiveData<Event<Int>>()
-    private val realm = Realm.getDefaultInstance()
-    private val userRepository = UserRepository(realm)
+    private val statusMessage = MutableLiveData<Event<String>>()
 
-    val message: LiveData<Event<Int>>
+    private var realm: Realm
+    private var userRepository: UserRepository
+
+    init {
+        Log.d(TAG, "Initialize realm instance")
+        realm = Realm.getDefaultInstance()
+        userRepository = UserRepository(realm)
+    }
+
+    val message: LiveData<Event<String>>
         get() = statusMessage
 
     fun getUserDetail(username: String): LiveData<User> {
@@ -64,12 +71,18 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
                 }
             }, Response.ErrorListener { error ->
                 when (error) {
-                    is NetworkError -> statusMessage.value = Event(R.string.no_internet)
-                    is ServerError -> statusMessage.value = Event(R.string.no_server)
-                    is AuthFailureError -> statusMessage.value = Event(R.string.no_internet)
-                    is ParseError -> statusMessage.value = Event(R.string.no_parsing)
-                    is NoConnectionError -> statusMessage.value = Event(R.string.no_internet)
-                    is TimeoutError -> statusMessage.value = Event(R.string.no_timeout)
+                    is NetworkError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_internet))
+                    is ServerError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_server))
+                    is AuthFailureError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_internet))
+                    is ParseError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_parsing))
+                    is NoConnectionError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_internet))
+                    is TimeoutError -> statusMessage.value =
+                        Event(mApplication.applicationContext.getString(R.string.no_timeout))
                 }
             }) {
                 override fun getHeaders(): MutableMap<String, String> {
@@ -85,18 +98,21 @@ class DetailViewModel(mApplication: Application) : AndroidViewModel(mApplication
 
     fun insertFavorite(user: User) {
         userRepository.insertFavorite(user)
-        statusMessage.value = Event(R.string.add_favorite)
+        statusMessage.value =
+            Event(mApplication.applicationContext.getString(R.string.add_favorite, user.username))
     }
 
     fun deleteFavorite(username: String) {
         userRepository.deleteFavoriteByUsername(username)
-        statusMessage.value = Event(R.string.del_favorite)
+        statusMessage.value =
+            Event(mApplication.applicationContext.getString(R.string.del_favorite, username))
     }
 
     fun isFavoriteExist(username: String): Boolean =
         userRepository.getFavoriteByUsername(username) != null
 
     override fun onCleared() {
+        Log.d(TAG, "Delete realm instance")
         realm.close()
         super.onCleared()
     }

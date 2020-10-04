@@ -19,7 +19,13 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
         private const val KEY_LANGUAGE = "key_language"
     }
 
+    private lateinit var onAlertConfirmDialog: OnAlertConfirmDialog
+
     private var sharedPref: SharedPreferences? = null
+
+    override fun setOnAlertConfirmDialog(onAlertConfirmDialog: OnAlertConfirmDialog) {
+        this.onAlertConfirmDialog = onAlertConfirmDialog
+    }
 
     override fun attachBaseContext(newBase: Context) {
         sharedPref = SharedPreferences(newBase)
@@ -68,9 +74,22 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
                     onRecreateActivity(tag)
                 }
             }
+            R.id.menu_delete_all -> {
+                mBuilder.setTitle(getString(R.string.dial_delete_all_favorite))
+                mBuilder.setMessage(getString(R.string.dial_delete_all_favorite_text))
+
+                mBuilder.setPositiveButton(getString(R.string.del_confirm_yes)) { _, _ ->
+                    onAlertConfirmDialog.onTrue()
+                }
+
+                mBuilder.setNegativeButton(getString(R.string.del_confrim_no)) { dialog, _ ->
+                    dialog.cancel()
+                    onAlertConfirmDialog.onFalse()
+                }
+            }
         }
         mAlertDialog = mBuilder.create()
-        mAlertDialog.setCanceledOnTouchOutside(false)
+        mAlertDialog.setCanceledOnTouchOutside(true)
         mAlertDialog.show()
     }
 
@@ -118,5 +137,10 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
 
     interface VolleyCallBack {
         fun onSuccess()
+    }
+
+    interface OnAlertConfirmDialog {
+        fun onTrue()
+        fun onFalse()
     }
 }
