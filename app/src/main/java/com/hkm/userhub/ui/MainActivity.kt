@@ -11,17 +11,13 @@ import com.hkm.userhub.tools.ContentWrapper
 import com.hkm.userhub.tools.OnMyFragmentListener
 import com.hkm.userhub.tools.SharedPreferences
 import com.hkm.userhub.ui.home.HomeFragment
+import com.hkm.userhub.ui.settings.SettingsViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnMyFragmentListener {
-    companion object {
-        private const val KEY_LANGUAGE = "key_language"
-    }
-
     private lateinit var onAlertConfirmDialog: OnAlertConfirmDialog
-
-    private var sharedPref: SharedPreferences? = null
+    private lateinit var sharedPref: SharedPreferences
 
     override fun setOnAlertConfirmDialog(onAlertConfirmDialog: OnAlertConfirmDialog) {
         this.onAlertConfirmDialog = onAlertConfirmDialog
@@ -29,8 +25,9 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
 
     override fun attachBaseContext(newBase: Context) {
         sharedPref = SharedPreferences(newBase)
-        val languageCode = sharedPref?.getData(KEY_LANGUAGE)
+        val languageCode = sharedPref.getData(SettingsViewModel.KEY_LANGUAGE)
         val mContext = ContentWrapper.changeLang(newBase, languageCode.toString())
+
         super.attachBaseContext(mContext)
     }
 
@@ -47,33 +44,10 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
     }
 
     override fun showAlertDialog(menuId: Int, tag: String) {
-        var mAlertDialog: AlertDialog? = null
+        val mAlertDialog: AlertDialog
         val mBuilder: AlertDialog.Builder =
             AlertDialog.Builder(this@MainActivity, R.style.MyPopupMenu)
         when (menuId) {
-            R.id.menu_language -> {
-                mBuilder.setTitle(getString(R.string.choose_language))
-
-                val languages = arrayOf(
-                    getString(R.string.language_english),
-                    getString(R.string.language_indonesian)
-                )
-
-                val checkedItem = when (sharedPref?.getData(KEY_LANGUAGE)) {
-                    "en" -> 0
-                    "in" -> 1
-                    else -> 0
-                }
-
-                mBuilder.setSingleChoiceItems(languages, checkedItem) { _, which ->
-                    when (which) {
-                        0 -> sharedPref?.saveData(KEY_LANGUAGE, "en")
-                        1 -> sharedPref?.saveData(KEY_LANGUAGE, "in")
-                    }
-                    mAlertDialog?.dismiss()
-                    onRecreateActivity(tag)
-                }
-            }
             R.id.menu_delete_all -> {
                 mBuilder.setTitle(getString(R.string.dial_delete_all_favorite))
                 mBuilder.setMessage(getString(R.string.dial_delete_all_favorite_text))
@@ -82,7 +56,7 @@ class MainActivity : AppCompatActivity(), OnMyFragmentListener {
                     onAlertConfirmDialog.onTrue()
                 }
 
-                mBuilder.setNegativeButton(getString(R.string.del_confrim_no)) { dialog, _ ->
+                mBuilder.setNegativeButton(getString(R.string.del_confirm_no)) { dialog, _ ->
                     dialog.cancel()
                     onAlertConfirmDialog.onFalse()
                 }

@@ -20,7 +20,9 @@
             android:icon="@drawable/ic_delete_white"
             app:showAsAction="ifRoom" />
         <item
-            android:id="@+id/menu_language"
-            android:title="@string/language" />
+            android:id="@+id/menu_settings"
+            android:title="@string/menu_settings"
+            android:icon="@drawable/ic_settings_white"
+            app:showAsAction="always" />
     </group>
 </menu>

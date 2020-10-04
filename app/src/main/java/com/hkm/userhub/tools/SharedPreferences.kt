@@ -20,6 +20,17 @@ class SharedPreferences(val context: Context) {
         return sharedPref.getString(key, null)
     }
 
+    fun saveBoolean(key: String, value: Boolean) {
+        sharedPref.edit {
+            putBoolean(key, value)
+            apply()
+        }
+    }
+
+    fun getBoolean(key: String): Boolean? {
+        return sharedPref.getBoolean(key, false)
+    }
+
     fun clear() {
         sharedPref.edit {
             clear()

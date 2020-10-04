@@ -88,17 +88,6 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_language -> {
-                mOnMyFragmentListener?.showAlertDialog(
-                    R.id.menu_language,
-                    FavoriteFragment::class.java.simpleName
-                )
-                true
-            }
-            R.id.menu_home -> {
-                view?.findNavController()?.popBackStack(R.id.homeFragment, false)
-                true
-            }
             R.id.menu_delete_all -> {
                 mOnMyFragmentListener?.showAlertDialog(
                     R.id.menu_delete_all,
@@ -119,6 +108,19 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
                     override fun onFalse() {}
                 })
+                true
+            }
+            R.id.menu_settings -> {
+                view?.findNavController()
+                    ?.navigate(FavoriteFragmentDirections.actionFavoriteFragmentToSettingsFragment())
+                    .apply {
+                        mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_settings))
+                        mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_settings, false)
+                    }
                 true
             }
             else -> true

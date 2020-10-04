@@ -120,20 +120,27 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_settings, true)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_language -> {
-                mOnMyFragmentListener?.showAlertDialog(
-                    R.id.menu_language,
-                    DetailFragment::class.java.simpleName
-                )
-                true
-            }
             R.id.menu_home -> {
                 view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                true
+            }
+            R.id.menu_settings -> {
+                view?.findNavController()
+                    ?.navigate(DetailFragmentDirections.actionDetailFragmentToSettingsFragment())
+                    .apply {
+                        mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_settings))
+                        mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_settings, false)
+                    }
                 true
             }
             else -> true

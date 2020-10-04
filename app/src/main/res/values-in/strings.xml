@@ -40,10 +40,23 @@
     <string name="del_confirm_yes">IYA</string>
     <string name="dial_delete">Hapus Favorit</string>
     <string name="dial_delete_text">Apakah anda yakin untuk menghapus user ini dari Favorit?</string>
-    <string name="del_confrim_no">TIDAK</string>
+    <string name="del_confirm_no">TIDAK</string>
     <string name="menu_delete_all">Hapus Semua</string>
     <string name="dial_delete_all_favorite">Hapus Semua Favorit</string>
     <string name="dial_delete_all_favorite_text">Apakah anda yakin untuk menghapus semua user Favorit?</string>
     <string name="del_favorite_all">Semua favorit sudah dihapus.</string>
     <string name="favorite_not_found">Anda tidak memiliki user Favorit.</string>
+
+    <string name="setting_language">Bahasa</string>
+    <string name="setting_reminder">Notifikasi Pengingat</string>
+    <string name="setting_language_title">Bahasa aplikasi</string>
+    <string name="setting_reminder_title">Notifikasi pengingat harian</string>
+    <string name="setting_reminder_summary_off">Notifikasi pengingat harian untuk menggunakan app tidak akan dikirimkan setiap hari pada jam 09:00 AM</string>
+    <string name="setting_reminder_summary_on">Notifikasi pengingat harian untuk menggunakan app akan dikirimkan setiap hari pada jam 09:00 AM</string>
+
+    <string name="menu_settings">Pengaturan</string>
+    <string name="reminder_message">Mari temukan user populer di Github!</string>
+    <string name="reminder_on">Pengingat harian dihidupkan</string>
+    <string name="reminder_off">Pengingat harian dimatikan</string>
+    <string name="reminder_title">Hey, kamu!</string>
 </resources>

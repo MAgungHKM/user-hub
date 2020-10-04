@@ -106,7 +106,7 @@ class UserAdapter(private val showDivider: Boolean = false) :
                     onClickWeakCallback.get()?.onDeleteClicked(listUser[adapterPosition])
                 }
 
-                alert.setNegativeButton(v.context.getString(R.string.del_confrim_no)) { dialog, _ ->
+                alert.setNegativeButton(v.context.getString(R.string.del_confirm_no)) { dialog, _ ->
                     dialog.cancel()
                 }
 

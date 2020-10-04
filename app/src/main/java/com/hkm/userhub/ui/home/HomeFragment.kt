@@ -128,19 +128,13 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_home))
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
+        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_settings, true)
         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, true)
         mOnMyFragmentListener?.onOptionsMenuSelected(this)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_language -> {
-                mOnMyFragmentListener?.showAlertDialog(
-                    R.id.menu_language,
-                    HomeFragment::class.java.simpleName
-                )
-                true
-            }
             R.id.menu_home -> {
                 view?.findNavController()?.popBackStack(R.id.homeFragment, false)
                 true
@@ -152,7 +146,20 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                         mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_favorite))
                         mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
                         mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
-                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, true)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+                    }
+                true
+            }
+            R.id.menu_settings -> {
+                view?.findNavController()
+                    ?.navigate(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
+                    .apply {
+                        mOnMyFragmentListener?.onChangeToolbarTitle(getString(R.string.menu_settings))
+                        mOnMyFragmentListener?.onChangeToolbarDisplayHome(true)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_favorite, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_home, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_delete_all, false)
+                        mOnMyFragmentListener?.setMenuVisibility(R.id.menu_settings, false)
                     }
                 true
             }
