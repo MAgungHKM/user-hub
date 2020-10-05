@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <permission
+        android:name="com.hkm.userhub.READ_DATABASE"
+        android:protectionLevel="normal" />
+
     <application
         android:name=".UserHub"
         android:allowBackup="true"
@@ -16,8 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+        <provider
+            android:name="com.hkm.userhub.provider.FavoriteProvider"
+            android:authorities="com.hkm.userhub.provider.FavoriteProvider"
+            android:exported="true"
+            android:readPermission="com.hkm.userhub.READ_DATABASE" />
+
         <receiver
-            android:name=".receiver.ReminderReceiver"
+            android:name="com.hkm.userhub.receiver.ReminderReceiver"
             android:enabled="true"
             android:exported="false" />
 

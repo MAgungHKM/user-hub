@@ -12,5 +12,5 @@ open class User(
     @PrimaryKey var username: String = "",
     var location: String = "",
     var company: String = "",
-    var followersCount: String = ""
+    var followers: String = ""
 ) : Parcelable, RealmObject()

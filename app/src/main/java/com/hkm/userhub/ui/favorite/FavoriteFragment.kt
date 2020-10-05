@@ -1,7 +1,10 @@
 package com.hkm.userhub.ui.favorite
 
 import android.content.Context
+import android.database.ContentObserver
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +17,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hkm.userhub.R
 import com.hkm.userhub.adapter.UserAdapter
+import com.hkm.userhub.db.DatabaseContract
 import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.ItemSnaperHelper
 import com.hkm.userhub.tools.OnMyFragmentListener
@@ -40,6 +44,22 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         favoriteViewModel = ViewModelProvider(requireActivity()).get(FavoriteViewModel::class.java)
+
+        val handlerThread = HandlerThread("DataObserver")
+        handlerThread.start()
+        val handler = Handler(handlerThread.looper)
+
+        val myObserver = object : ContentObserver(handler) {
+            override fun onChange(selfChange: Boolean) {
+                favoriteViewModel.getListFavorite()
+            }
+        }
+
+        context?.contentResolver?.registerContentObserver(
+            DatabaseContract.CONTENT_URI,
+            true,
+            myObserver
+        )
     }
 
     override fun onCreateView(
@@ -56,7 +76,7 @@ class FavoriteFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         favoriteViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
-                Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(it, event.parameter), Toast.LENGTH_SHORT).show()
             }
         })
 

@@ -60,7 +60,7 @@ class DetailFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
         detailViewModel.message.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(it, event.parameter), Toast.LENGTH_SHORT).show()
             }
         })
 

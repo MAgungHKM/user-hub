@@ -41,7 +41,7 @@ class SettingsViewModel(mApplication: Application) : AndroidViewModel(mApplicati
         Log.d(TAG, "Daily reminder enabled")
     }
 
-    fun disableRemind(context: Context) {
+    fun disableReminder(context: Context) {
         reminderReceiver.disableReminder(context)
         statusMessage.value = Event(R.string.reminder_off)
         Log.d(TAG, "Daily reminder disabled")

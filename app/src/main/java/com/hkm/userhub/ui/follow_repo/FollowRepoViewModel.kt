@@ -53,7 +53,7 @@ class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplica
 
                         getFollowersCount(login, object : VolleyCallBack {
                             override fun onSuccess() {
-                                user.followersCount = followersCount
+                                user.followers = followersCount
                                 callBack.onSuccess()
                             }
                         })
@@ -107,7 +107,7 @@ class FollowRepoViewModel(mApplication: Application) : AndroidViewModel(mApplica
 
                         getFollowersCount(login, object : VolleyCallBack {
                             override fun onSuccess() {
-                                user.followersCount = followersCount
+                                user.followers = followersCount
                                 callBack.onSuccess()
                             }
                         })

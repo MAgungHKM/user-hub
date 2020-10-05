@@ -1,6 +1,8 @@
 package com.hkm.userhub.ui.detail
 
 import android.app.Application
+import android.content.ContentValues
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -10,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.hkm.userhub.BuildConfig
 import com.hkm.userhub.R
+import com.hkm.userhub.db.DatabaseContract
 import com.hkm.userhub.db.UserRepository
 import com.hkm.userhub.entitiy.User
 import com.hkm.userhub.tools.Event
@@ -25,7 +28,7 @@ class DetailViewModel(private val mApplication: Application) : AndroidViewModel(
 
     private val user = MutableLiveData<User>()
     private val requestQueue = Volley.newRequestQueue(mApplication.applicationContext)
-    private val statusMessage = MutableLiveData<Event<String>>()
+    private val statusMessage = MutableLiveData<Event<Int>>()
 
     private var realm: Realm
     private var userRepository: UserRepository
@@ -36,7 +39,7 @@ class DetailViewModel(private val mApplication: Application) : AndroidViewModel(
         userRepository = UserRepository(realm)
     }
 
-    val message: LiveData<Event<String>>
+    val message: LiveData<Event<Int>>
         get() = statusMessage
 
     fun getUserDetail(username: String): LiveData<User> {
@@ -62,7 +65,7 @@ class DetailViewModel(private val mApplication: Application) : AndroidViewModel(
                     user.company = company
 
                     val followersCount = response.getString("followers")
-                    user.followersCount = followersCount
+                    user.followers = followersCount
 
                     this.user.postValue(user)
                     Log.d(TAG, "getUserDetail: Success")
@@ -71,18 +74,12 @@ class DetailViewModel(private val mApplication: Application) : AndroidViewModel(
                 }
             }, Response.ErrorListener { error ->
                 when (error) {
-                    is NetworkError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_internet))
-                    is ServerError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_server))
-                    is AuthFailureError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_internet))
-                    is ParseError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_parsing))
-                    is NoConnectionError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_internet))
-                    is TimeoutError -> statusMessage.value =
-                        Event(mApplication.applicationContext.getString(R.string.no_timeout))
+                    is NetworkError -> statusMessage.value = Event(R.string.no_internet)
+                    is ServerError -> statusMessage.value = Event(R.string.no_server)
+                    is AuthFailureError -> statusMessage.value = Event(R.string.no_internet)
+                    is ParseError -> statusMessage.value = Event(R.string.no_parsing)
+                    is NoConnectionError -> statusMessage.value = Event(R.string.no_internet)
+                    is TimeoutError -> statusMessage.value = Event(R.string.no_timeout)
                 }
             }) {
                 override fun getHeaders(): MutableMap<String, String> {
@@ -97,15 +94,24 @@ class DetailViewModel(private val mApplication: Application) : AndroidViewModel(
     }
 
     fun insertFavorite(user: User) {
-        userRepository.insertFavorite(user)
-        statusMessage.value =
-            Event(mApplication.applicationContext.getString(R.string.add_favorite, user.username))
+        val uri = Uri.parse("${DatabaseContract.CONTENT_URI}")
+        val values = ContentValues()
+        values.put(DatabaseContract.COL_AVATAR, user.avatar)
+        values.put(DatabaseContract.COL_NAME, user.name)
+        values.put(DatabaseContract.COL_USERNAME, user.username)
+        values.put(DatabaseContract.COL_LOCATION, user.location)
+        values.put(DatabaseContract.COL_COMPANY, user.company)
+        values.put(DatabaseContract.COL_FOLLOWERS, user.followers)
+
+        mApplication.contentResolver.insert(uri, values)
+        statusMessage.value = Event(R.string.add_favorite, user.username)
     }
 
     fun deleteFavorite(username: String) {
-        userRepository.deleteFavoriteByUsername(username)
-        statusMessage.value =
-            Event(mApplication.applicationContext.getString(R.string.del_favorite, username))
+        val uri = Uri.parse("${DatabaseContract.CONTENT_URI}/$username")
+
+        mApplication.contentResolver.delete(uri, null, null)
+        statusMessage.value = Event(R.string.del_favorite, username)
     }
 
     fun isFavoriteExist(username: String): Boolean =

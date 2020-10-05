@@ -42,21 +42,6 @@ class UserAdapter(private val showDivider: Boolean = false) :
 
         holder.showDivider(showDivider)
         holder.bindUser(user)
-
-//        if (showDivider) {
-//            holder.bindUser(user)
-//            holder.itemView.setOnSingleClickListener {
-//                if (it.id == holder.itemView.btn_delete.id)
-//                    onClickCallback.onItemClicked(listUser[holder.adapterPosition])
-//                else
-//                    onClickCallback.onItemClicked(listUser[holder.adapterPosition])
-//            }
-//        } else {
-//            holder.bindUser(user)
-//            holder.itemView.setOnSingleClickListener {
-//                onClickCallback.onItemClicked(listUser[holder.adapterPosition])
-//            }
-//        }
     }
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -70,7 +55,7 @@ class UserAdapter(private val showDivider: Boolean = false) :
 
             with(itemView) {
                 tv_username.text = user.username
-                tv_followers.text = user.followersCount
+                tv_followers.text = user.followers
 
                 Glide.with(context)
                     .load(user.avatar)

@@ -90,20 +90,18 @@ class SettingsFragment : PreferenceFragmentCompat(),
                 mOnMyFragmentListener?.onRecreateActivity(SettingsFragment::class.java.simpleName)
             }
             KEY_REMINDER -> {
-//                reminderPreference.isChecked = sharedPreferences.getBoolean(KEY_REMINDER, false)
-
                 val switch = sharedPreferences.getBoolean(KEY_REMINDER, false)
 
                 settingsViewModel.saveBoolean(KEY_REMINDER, switch)
 
                 if (switch)
                     settingsViewModel.enableReminder(
-                        requireContext(),
+                        context as Context,
                         getString(R.string.reminder_title),
                         getString(R.string.reminder_message)
                     )
                 else
-                    settingsViewModel.disableRemind(requireContext())
+                    settingsViewModel.disableReminder(context as Context)
             }
         }
     }

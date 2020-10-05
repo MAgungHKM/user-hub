@@ -6,7 +6,6 @@
     <color name="colorTextPrimary">#DDFFFFFF</color>
     <color name="colorTextSecondary">#99FFFFFF</color>
     <color name="colorTextHint">#7FFFFFFF</color>
-    <color name="colorStatusBar">#121212</color>
     <color name="colorActionBar">#212121</color>
     <color name="colorBackground">#303030</color>
     <color name="colorCard">#424242</color>

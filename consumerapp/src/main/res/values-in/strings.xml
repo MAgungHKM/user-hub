@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Consumer Hub</string>
+
+    <string name="dummy_name">Nama Kosong</string>
+    <string name="dummy_place">Tempat Kosong</string>
+    <string name="dummy_location">Lokasi Kosong</string>
+    <string name="followers">Pengikut</string>
+    <string name="follower_count_background">follower_count_background</string>
+
+    <string name="tab_followers">Pengikut</string>
+    <string name="tab_following">Diikuti</string>
+    <string name="tab_repositories">Repositori</string>
+    <string name="no_follower_found">Pengguna ini tidak memiliki pengikut.</string>
+    <string name="no_following_found">Pengguna ini tidak mengikuti siapapun.</string>
+    <string name="no_repository_found">Pengguna ini tidak mempunyai repositori publik sama sekali.</string>
+    <string name="description_not_found">Tidak terdapat deskripsi.</string>
+    <string name="dummy_description">Deskripsi Kosong</string>
+    <string name="stargazers">Dibintangi</string>
+    <string name="tab_index_out_of_bounds">Kenapa anda disini?</string>
+    <string name="dummy_username">Nama Pengguna Kosong</string>
+    <string name="menu_home">Home</string>
+    <string name="home_background">Home Background</string>
+    <string name="no_internet">Tidak bisa terhubung ke internet. Cek koneksi jaringan anda!</string>
+    <string name="no_server">Server tidak bisa ditemukan. Cobalah beberapa saat lagi!</string>
+    <string name="no_parsing">Kesalahan dalam Parsing. Cobalah beberapa saat lagi!</string>
+    <string name="no_timeout">Koneksi terlalu lambat. Cek koneksi jaringan anda!.</string>
+
+    <string name="menu_favorite">User Favorit</string>
+    <string name="favorite_not_found">Anda tidak memiliki user Favorit.</string>
+
+    <string name="setting_language">Bahasa</string>
+    <string name="setting_reminder">Notifikasi Pengingat</string>
+    <string name="setting_language_title">Bahasa aplikasi</string>
+    <string name="setting_reminder_title">Notifikasi pengingat harian</string>
+    <string name="setting_reminder_summary_off">Notifikasi pengingat harian untuk menggunakan app tidak akan dikirimkan setiap hari pada jam 09:00 AM</string>
+    <string name="setting_reminder_summary_on">Notifikasi pengingat harian untuk menggunakan app akan dikirimkan setiap hari pada jam 09:00 AM</string>
+
+    <string name="menu_settings">Pengaturan</string>
+    <string name="reminder_message">Mari temukan user populer di Github!</string>
+    <string name="reminder_on">Pengingat harian dihidupkan</string>
+    <string name="reminder_off">Pengingat harian dimatikan</string>
+    <string name="reminder_title">Hey, kamu!</string>
+</resources>

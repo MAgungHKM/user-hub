@@ -52,7 +52,7 @@ class HomeViewModel(mApplication: Application) : AndroidViewModel(mApplication) 
 
                         getFollowersCount(username, object : VolleyCallBack {
                             override fun onSuccess() {
-                                user.followersCount = followersCount
+                                user.followers = followersCount
                                 callBack.onSuccess()
                             }
                         })

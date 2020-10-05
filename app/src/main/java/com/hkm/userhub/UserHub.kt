@@ -10,6 +10,7 @@ class UserHub : Application() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()
             .name("user_hub.realm")
+            .schemaVersion(1)
             .build()
         Realm.setDefaultConfiguration(config)
     }
