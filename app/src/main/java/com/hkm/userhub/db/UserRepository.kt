@@ -10,7 +10,9 @@ class UserRepository(realm: Realm) {
 
     fun insertFavorite(values: ContentValues) = userDao.insert(values)
 
-    fun getAllFavorite(): Cursor = userDao.queryAllUser()
+    fun getAll(): Cursor = userDao.queryAllUser()
+
+    fun getAllFavorite(): ArrayList<User> = userDao.getAllUser()
 
     fun getFavoriteByUsername(username: String): User? = userDao.getUser(username)
 

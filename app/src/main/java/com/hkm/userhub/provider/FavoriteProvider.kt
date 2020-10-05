@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
-import android.util.Log
 import com.hkm.userhub.db.DatabaseContract
 import com.hkm.userhub.db.UserRepository
 import io.realm.Realm
@@ -43,7 +42,7 @@ class FavoriteProvider : ContentProvider() {
         realm.use {
             when (mUriMatcher.match(uri)) {
                 FAVORITE -> {
-                    cursor = userRepository.getAllFavorite()
+                    cursor = userRepository.getAll()
                 }
                 else -> throw throw UnsupportedOperationException("Unknown Uri: $uri")
             }
@@ -58,8 +57,6 @@ class FavoriteProvider : ContentProvider() {
         var count = 0
         val realm = Realm.getDefaultInstance()
         val userRepository = UserRepository(realm)
-
-        Log.e("FUUUUUUUUUUUUUUUUUUU", uri.toString())
 
         realm.use {
             when (mUriMatcher.match(uri)) {

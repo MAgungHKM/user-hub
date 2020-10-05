@@ -28,6 +28,10 @@ class UserAdapter(private val showDivider: Boolean = false) :
         notifyDataSetChanged()
     }
 
+    fun getData(): ArrayList<User> {
+        return listUser
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)

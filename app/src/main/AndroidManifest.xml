@@ -20,16 +20,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+        <receiver android:name=".widget.FavoriteBannerWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/favorite_banner_widget_info" />
+        </receiver>
+
         <provider
-            android:name="com.hkm.userhub.provider.FavoriteProvider"
+            android:name=".provider.FavoriteProvider"
             android:authorities="com.hkm.userhub.provider.FavoriteProvider"
             android:exported="true"
             android:readPermission="com.hkm.userhub.READ_DATABASE" />
 
         <receiver
-            android:name="com.hkm.userhub.receiver.ReminderReceiver"
+            android:name=".receiver.ReminderReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <service
+            android:name="com.hkm.userhub.widget.StackWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>

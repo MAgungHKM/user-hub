@@ -54,4 +54,6 @@
     <string name="reminder_on">Daily reminder is enabled</string>
     <string name="reminder_off">Daily reminder is disabled</string>
     <string name="reminder_title">Hello There!</string>
+    <string name="stack_view_text" translatable="false">Stack View Text</string>
+    <string name="widget_item_icon" translatable="false">Widget Item</string>
 </resources>
